@@ -2924,7 +2924,7 @@ def bot(op):
 #==============================================
             elif "St @" in msg.text:
               if msg.from_ in admin:
-                _name = msg.text.replace("St @","","oi)
+                _name = msg.text.replace("St @","","oi")
                 _nametarget = _name.rstrip(' ')
                 gs = cl.getGroup(msg.to)
                 for g in gs.members:
