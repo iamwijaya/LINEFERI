@@ -9,7 +9,7 @@ from gtts import gTTS
 import time,random,sys,json,codecs,threading,glob,urllib,urllib2,urllib3,re,ast,os,subprocess,requests,tempfile
 
 nadya = LINETCR.LINE()
-nadya.login(token="")
+nadya.login(token="EooPMrDFJg2SDqtQgOb2.WCCRkMNgQXINSOQNF/5yiG.Gr1QAm6ev7rxULMVUgxu0pKM01GU1AbM87VvaFh84As=")
 print "Chucky-Login Success\n\n=====[Sukses Login]====="
 
 reload(sys)
