@@ -2539,7 +2539,7 @@ def bot(op):
                                 nadya.sendText(msg.to,"Upload image failed.")
 
             elif msg.text.lower() in ["pap owner","pap creator"]:
-                                link = [""]
+                                link = ["http://dl.profile.line.naver.jp/0hxJnVf4lYJ2VTLwtU1cNYMm9qKQgkASEtKxtoUXAsKlYuGGhhaBk7A39_fwZ9FjBjaU8_VyIrcFZ9"]
                                 pilih = random.choice(link)
                                 nadya.sendImageWithURL(msg.to,pilih)
 
