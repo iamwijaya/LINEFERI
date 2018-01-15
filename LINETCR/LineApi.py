@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 from Api import Poll, Talk, channel
 from lib.curve.ttypes import *
+import requests
+import shutil
+import json
+from random import randint
 
 def def_callback(str):
-    print(str)
+    print "\nLINETCR LOGIN URL: "+str+"\n"
 
 class LINE:
 
@@ -18,6 +22,7 @@ class LINE:
 
   def __init__(self):
     self.Talk = Talk()
+    self._session = requests.session()
 
   def login(self, mail=None, passwd=None, cert=None, token=None, qr=False, callback=None):
     if callback is None:
@@ -37,18 +42,18 @@ class LINE:
     self.authToken = self.Talk.authToken
     self.cert = self.Talk.cert
     self._headers = {
-              'X-Line-Application': 'DESKTOPMAC 10.10.2-YOSEMITE-x64    MAC 4.5.0', 
+              'X-Line-Application': 'CHROMEOS\t.1.4.5\tChrome_HP\t1',#'DESKTOPMAC 10.10.2-YOSEMITE-x64    MAC 4.5.0', 
               'X-Line-Access': self.authToken, 
-              'User-Agent': 'Line/6.0.0 iPad4,1 9.0.2'
+              'User-Agent': 'Line/7.18.0'#'Line/7.18.0 AppleWebKit/534.30'#'Line/6.0.0 iPad4,1 9.0.2'#'Line/7.18.0 iPad4,1 9.0.2'
    }
     self.Poll = Poll(self.authToken)
-    self.channel = channel.Channel(self.authToken)
-    self.channel.login()	
-    self.mid = self.channel.mid
-    self.channel_access_token = self.channel.channel_access_token
-    self.token = self.channel.token
-    self.obs_token = self.channel.obs_token
-    self.refresh_token = self.channel.refresh_token
+    #self.channel = channel.Channel(self.authToken)
+    #self.channel.login()
+    #self.mid = self.channel.mid
+    #self.channel_access_token = self.channel.channel_access_token
+    #self.token = self.channel.token
+    #self.obs_token = self.channel.obs_token
+    #self.refresh_token = self.channel.refresh_token
 
 
   """User"""
@@ -67,6 +72,9 @@ class LINE:
 
   def updateSettings(self, settingObject):
     return self.Talk.client.updateSettings(0, settingObject)
+
+  def updateDisplayPicture(self, hash_id):
+    return self.Talk.client.updateProfileAttribute(0, 8, hash_id)
 
 
   """Operation"""
@@ -113,11 +121,10 @@ class LINE:
             'ver': '1.0',
         }
         data = {
-            'params': json.dumps(params)            
-        }       
+            'params': json.dumps(params)
+        }
 
         r = self.post_content('https://os.line.naver.jp/talk/m/upload.nhn', data=data, files=files)
-        print r
         if r.status_code != 201:
             raise Exception('Upload image failure.')
         return True
@@ -127,7 +134,7 @@ class LINE:
 
         :param url: image url to send
         """
-        path = 'tmp/pythonLine.data'
+        path = 'pythonLine.data'
 
         r = requests.get(url, stream=True)
         if r.status_code == 200:
@@ -140,9 +147,104 @@ class LINE:
             self.sendImage(to_, path)
         except Exception as e:
             raise e
-			
+
+  def sendAudioWithURL(self, to_, url):
+      path = 'pythonLiness.data'
+      r = requests.get(url, stream=True)
+      if r.status_code == 200:
+         with open(path, 'w') as f:
+            shutil.copyfileobj(r.raw, f)
+      else:
+         raise Exception('Download Audio failure.')
+      try:
+         self.sendAudio(to_, path)
+      except Exception as e:
+         raise e
+  def sendAudio(self, to_, path):
+      M = Message(to=to_,contentType = 3)
+      M.contentMetadata = None
+      M.contentPreview = None
+      M_id = self.Talk.client.sendMessage(0,M).id
+      files = {
+         'file': open(path, 'rb'),
+      }
+      params = {
+         'name': 'media',
+         'oid': M_id,
+         'size': len(open(path, 'rb').read()),
+         'type': 'audio',
+         'ver': '1.0',
+      }
+      data = {
+         'params': json.dumps(params)
+      }
+      r = self.post_content('https://os.line.naver.jp/talk/m/upload.nhn', data=data, files=files)
+      if r.status_code != 201:
+         raise Exception('Upload image failure.')
+      return True
+  def sendVideo(self, to_, path):
+      M = Message(to=to_,contentType = 2)
+      M.contentMetadata = {
+           'VIDLEN' : '0',
+           'DURATION' : '0'
+       }
+      M.contentPreview = None
+      M_id = self.Talk.client.sendMessage(0,M).id
+      files = {
+         'file': open(path, 'rb'),
+      }
+      params = {
+         'name': 'media',
+         'oid': M_id,
+         'size': len(open(path, 'rb').read()),
+         'type': 'video',
+         'ver': '1.0',
+      }
+      data = {
+         'params': json.dumps(params)
+      }
+      r = self.post_content('https://os.line.naver.jp/talk/m/upload.nhn', data=data, files=files)
+      if r.status_code != 201:
+         raise Exception('Upload image failure.')
+      return True
+  def sendVideoWithURL(self, to_, url):
+      path = 'pythonLines.data'
+      r = requests.get(url, stream=True)
+      if r.status_code == 200:
+         with open(path, 'w') as f:
+            shutil.copyfileobj(r.raw, f)
+      else:
+         raise Exception('Download Audio failure.')
+      try:
+         self.sendVideo(to_, path)
+      except Exception as e:
+         raise e
+
+  def sendVoice(self, to_, path):
+          M = Message(to=to_, text=None, contentType = 3)
+          M.contentPreview = None
+          M_id = self._client.sendMessage(0,M).id
+          files = {
+              'file': open(path, 'rb'),
+          }
+          params = {
+              'name': 'voice_message',
+              'oid': M_id,
+              'size': len(open(path, 'rb').read()),
+              'type': 'audio',
+              'ver': '1.0',
+          }
+          data = {
+              'params': json.dumps(params)
+          }
+          r = self.post_content('https://os.line.naver.jp/talk/m/upload.nhn', data=data, files=files)
+          if r.status_code != 201:
+              raise Exception('Upload voice failure.')
+          return True
+
+
   def sendEvent(self, messageObject):
-        return self._client.sendEvent(0, messageObject)
+        return self.Talk.client.sendEvent(0, messageObject)
 
   def sendChatChecked(self, mid, lastMessageId):
         return self.Talk.client.sendChatChecked(0, mid, lastMessageId)
