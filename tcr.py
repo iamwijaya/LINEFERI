@@ -2003,41 +2003,6 @@ def bot(op):
                 nadya.sendText(msg.to, "☆Checkpoint Checked☆")
                 print "Setview"
 
-            elif msg.text in ["Jam on"]:
-                if wait["clock"] == True:
-                    nadya.sendText(msg.to,"already on")
-                else:
-                    wait["clock"] = True
-                    now2 = datetime.now()
-                    nowT = datetime.strftime(now2,"「%H:%M」")
-                    profile = nadya.getProfile()
-                    profile.displayName = wait["cName"] + nowT
-                    nadya.updateProfile(profile)
-                    nadya.sendText(msg.to,"done")
-            elif msg.text in ["Jam off"]:
-                if wait["clock"] == False:
-                    nadya.sendText(msg.to,"already off")
-                else:
-                    wait["clock"] = False
-                    nadya.sendText(msg.to,"done")
-            elif msg.text in ["Change clock "]:
-                n = msg.text.replace("Change clock ","")
-                if len(n.decode("utf-8")) > 13:
-                    nadya.sendText(msg.to,"changed")
-                else:
-                    wait["cName"] = n
-                    nadya.sendText(msg.to,"changed to\n\n" + n)
-            elif msg.text in ["Up"]:
-                if wait["clock"] == True:
-                    now2 = datetime.now()
-                    nowT = datetime.strftime(now2,"「%H:%M」")
-                    profile = nadya.getProfile()
-                    profile.displayName = wait["cName"] + nowT
-                    nadya.updateProfile(profile)
-                    nadya.sendText(msg.to,"Jam Update")
-                else:
-                    nadya.sendText(msg.to,"Please turn on the name clock"
-
             elif msg.text in ["Viewseen","Check","Ciduk","Cyduk"]:
 	        Group = ""
 	        dataResult, timeSeen, contacts, userList, timelist, recheckData = [], [], [], [], [], []
@@ -2418,7 +2383,42 @@ def bot(op):
                 except Exception as e:
                     nadya.sendText(msg.to, str(e))
 
- 
+#======================================================= 
+            elif msg.text in ["Jam on"]:
+                if wait["clock"] == True:
+                    nadya.sendText(msg.to,"already on")
+                else:
+                    wait["clock"] = True
+                    now2 = datetime.now()
+                    nowT = datetime.strftime(now2,"「%H:%M」")
+                    profile = nadya.getProfile()
+                    profile.displayName = wait["cName"] + nowT
+                    nadya.updateProfile(profile)
+                    nadya.sendText(msg.to,"done")
+            elif msg.text in ["Jam off"]:
+                if wait["clock"] == False:
+                    nadya.sendText(msg.to,"already off")
+                else:
+                    wait["clock"] = False
+                    nadya.sendText(msg.to,"done")
+            elif msg.text in ["Change clock "]:
+                n = msg.text.replace("Change clock ","")
+                if len(n.decode("utf-8")) > 13:
+                    nadya.sendText(msg.to,"changed")
+                else:
+                    wait["cName"] = n
+                    nadya.sendText(msg.to,"changed to\n\n" + n)
+            elif msg.text in ["Up"]:
+                if wait["clock"] == True:
+                    now2 = datetime.now()
+                    nowT = datetime.strftime(now2,"「%H:%M」")
+                    profile = nadya.getProfile()
+                    profile.displayName = wait["cName"] + nowT
+                    nadya.updateProfile(profile)
+                    nadya.sendText(msg.to,"Jam Update")
+                else:
+                    nadya.sendText(msg.to,"Please turn on the name clock"
+#========================================================
 	    elif "/musik " in msg.text:
 					songname = msg.text.replace("/musik ","")
 					params = {"songname": songname}
