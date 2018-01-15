@@ -9,7 +9,7 @@ from gtts import gTTS
 import time,random,sys,json,codecs,threading,glob,urllib,urllib2,urllib3,re,ast,os,subprocess,requests,tempfile
 
 nadya = LINETCR.LINE()
-nadya.login(token="EoDiJ9TLjBZgnbNONAt2.WCCRkMNgQXINSOQNF/5yiG.SSZC/GxnzpBNs+kdcHOzcmU6L7D83uFxY4XHlmj7T0k=")
+nadya.login(token="Eoc6Ty9AZqlBvVWJLL02.WCCRkMNgQXINSOQNF/5yiG.JFqYaukREaioAm4UCekMGodGz1tsiNT14lzGF0deSWI=")
 print "Chucky-Login Success\n\n=====[Sukses Login]====="
 
 reload(sys)
@@ -270,8 +270,6 @@ wait = {
     "Sider":{},
     "Simi":{},    
     "lang":"JP",
-    "clock":True,
-    "cName":"Feriantoyp ",
     "BlGroup":{}
 }
 
@@ -3231,32 +3229,6 @@ def bot(op):
     except Exception as error:
         print error
 
-def a2():
-    now2 = datetime.now()
-    nowT = datetime.strftime(now2,"%M")
-    if nowT[14:] in ["10","20","30","40","50","00"]:
-        return False
-    else:
-        return True
-
-
-def nameUpdate():
-    while True:
-        try:
-        #while a2():
-            #pass
-            if wait["clock"] == True:
-                now2 = datetime.now()
-                nowT = datetime.strftime(now2,"「%H:%M」")
-                profile = nadya.getProfile()
-                profile.displayName = wait["cName"] + nowT
-                nadya.updateProfile(profile)
-            time.sleep(600)
-        except:
-            pass
-thread2 = threading.Thread(target=nameUpdate)
-thread2.daemon = True
-thread2.start()
 
 
 while True:
